@@ -1323,6 +1323,7 @@ function submitToService() {
   }).length;
   const divider = '=======================================' + NL;
 
+  /* HIDDEN: Q&A loop kept in source but output suppressed
   let qaLines = '';
   examQuestionIndices.forEach(function(qIdx, i) {
     var q = pool[qIdx]; if(!q) return;
@@ -1336,6 +1337,8 @@ function submitToService() {
       + '   ' + t('email_correct_ans') + ' ' + correctAns + NL
       + '   ' + t('email_result_lbl') + ' ' + (isCorrect ? t('email_correct_mark') : t('email_incorrect_mark')) + NL + NL;
   });
+  */
+  const qaLines = '';
 
   const bodyText =
     t('email_title') + NL + divider
@@ -1349,9 +1352,11 @@ function submitToService() {
     + t('email_result') + ' ' + resultTxt + NL
     + t('email_lang') + ' ' + (lang==='zh' ? '中文' : 'EN') + NL
     + t('email_submitted') + ' ' + new Date().toLocaleString() + NL
+    /* HIDDEN: exam Q&A detail removed from email but kept in source
     + divider + NL
     + t('email_review') + NL + divider
     + qaLines + divider
+    */
     + t('email_footer');
 
   const subject = encodeURIComponent(t('email_subject_prefix') + ' - ' + name + ' - ' + score + '% - ' + resultTxt);
@@ -1374,6 +1379,7 @@ function sendResultEmail(score, pass, correct) {
   const sep       = '-'.repeat(80);
   const pool      = T[lang].questions || T.en.questions;
 
+  /* HIDDEN: Q&A loop kept in source but output suppressed
   let plainRows = '';
   examQuestionIndices.forEach(function(qIdx, i) {
     var q = pool[qIdx]; if(!q) return;
@@ -1388,6 +1394,8 @@ function sendResultEmail(score, pass, correct) {
       + '   ' + t('email_result_lbl') + ' ' + (isCorrect ? t('email_correct_mark') : t('email_incorrect_mark')) + NL
       + sep + NL;
   });
+  */
+  const plainRows = '';
 
   const mailBody =
     t('email_title') + NL
@@ -1401,9 +1409,11 @@ function sendResultEmail(score, pass, correct) {
     + t('email_score') + ' ' + score + '% (' + correct + '/' + examQuestions.length + ' ' + t('email_correct') + ') — ' + resultTxt + NL
     + t('email_lang') + ' ' + (lang==='zh' ? '中文' : 'EN') + NL
     + t('email_submitted') + ' ' + new Date().toLocaleString() + NL
+    /* HIDDEN: exam Q&A detail removed from email but kept in source
     + t('email_divider') + NL + NL
     + t('email_review') + NL + sep + NL
     + plainRows + NL
+    */
     + t('email_footer');
 
   const subject = encodeURIComponent(t('email_subject_prefix') + ' — ' + name + ' — ' + score + '% — ' + resultTxt);
