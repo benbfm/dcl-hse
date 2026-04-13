@@ -1322,21 +1322,6 @@ function submitExam() {
 }
 
 
-function populatePass() {
-  const v=visitorData;
-  $el('passName').textContent=(v.fullName||'').toUpperCase();
-  $el('passCompany').textContent=v.company||'—';
-  $el('passDate').textContent=v.date||'—';
-  $el('passScore').textContent=(v.examScore||'—')+'%';
-  $el('passPurpose').textContent=v.purpose||'—';
-  $el('passHost').textContent=v.host||'—';
-  const dt=v.date?new Date(v.date):new Date();
-  dt.setDate(dt.getDate()+30);
-  $el('passValidUntil').textContent=dt.toLocaleDateString();
-  $el('nextStepsText').innerHTML=t('next_steps');
-  buildQR();
-}
-
 function generateUID() {
   // Format: DCL-YYYYMMDD-XXXXX (date + 5 random alphanumeric chars)
   const now = new Date();
@@ -1506,7 +1491,6 @@ function sendResultEmail(score, pass, correct) {
   const letters   = ['A','B','C','D'];
   const resultTxt = pass ? t('email_passed') : t('email_failed');
   const NL        = '\r\n';
-  const sep       = '-'.repeat(80);
   const pool      = T[lang].questions || T.en.questions;
 
   const reviewLabel    = lang==='zh' ? '答题回顾'    : 'QUESTION REVIEW';
@@ -1518,6 +1502,7 @@ function sendResultEmail(score, pass, correct) {
   const wrongMark      = lang==='zh' ? '错误 ✗'     : 'Wrong ✗';
   const noAns          = lang==='zh' ? '（未作答）'  : '(no answer)';
   const noLabel        = '#';
+  const escapeMd       = function(s){ return String(s).replace(/\|/g,'&#124;'); };
 
   // Plain text summary
   const plainSummary =
@@ -1550,7 +1535,7 @@ function sendResultEmail(score, pass, correct) {
     const isCorrect = answered && examAnswers[i] === q.ans;
     const yourAns   = answered ? letters[examAnswers[i]] + '. ' + q.opts[examAnswers[i]] : noAns;
     const corrAns   = letters[q.ans] + '. ' + q.opts[q.ans];
-    qaMarkdown += '| ' + (i+1) + ' | ' + q.q + ' | ' + yourAns + ' | ' + corrAns + ' | ' + (isCorrect ? correctMark : wrongMark) + ' |' + NL;
+    qaMarkdown += '| ' + (i+1) + ' | ' + escapeMd(q.q) + ' | ' + escapeMd(yourAns) + ' | ' + escapeMd(corrAns) + ' | ' + (isCorrect ? correctMark : wrongMark) + ' |' + NL;
   });
 
   // Compose: plain text summary + #### separator + markdown Q&A table
